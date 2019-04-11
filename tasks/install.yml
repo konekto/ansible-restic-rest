@@ -10,16 +10,29 @@
     _platform_suffix: 'linux-386'
   when: ansible_userspace_bits == '32'
 
+- name: Set restic_rest_v to custom
+  set_fact:
+    restic_rest_v: "custom"
+  when: restic_use_custom_binary
+
 - name: Download client binary
   get_url:
     url: '{{ restic_rest_url }}'
     dest: '/tmp/'
   register: get_url_restic
+  when: not restic_use_custom_binary
 
 - name: Decompress the binary
   shell: "gzip -dc {{ get_url_restic.dest }} > {{ restic_install_path }}/{{ restic_rest_binary }}-{{ restic_rest_v }}"
   args:
     creates: '{{ restic_install_path }}/{{ restic_rest_binary }}-{{ restic_rest_v }}'
+  when: not restic_use_custom_binary
+
+- name: Ensure binary rest server exists
+  copy:
+    src: binary/rest-server
+    dest: '{{ restic_install_path }}/{{ restic_rest_binary }}-{{ restic_rest_v }}'
+  when: restic_use_custom_binary
 
 - name: Ensure binary permissions are correct
   file:
