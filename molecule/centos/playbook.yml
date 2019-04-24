@@ -1,5 +1,12 @@
 ---
 - name: Converge
   hosts: all
+  become: true
   roles:
-    - role: ansible-rest-server
+    - role: ansible-restic-rest
+      vars:
+        restic_use_custom_binary: true
+        restic_rest_repos:
+          - path: '/var/backups/projecta'
+            listen: ':8001'
+            args: '--append-only --private-repos'
