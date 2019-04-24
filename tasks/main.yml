@@ -1,5 +1,4 @@
 ---
-
 - name: Install restic-rest
   include_tasks: install.yml
   tags: install

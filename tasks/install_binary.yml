@@ -1,0 +1,10 @@
+- name: Set restic_rest_v to custom
+  set_fact:
+    restic_rest_v: "custom"
+  when: restic_use_custom_binary
+
+- name: Ensure binary rest server exists
+  copy:
+    src: binary/rest-server
+    dest: '{{ restic_install_path }}/{{ restic_rest_binary }}-{{ restic_rest_v }}'
+
