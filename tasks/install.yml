@@ -10,28 +10,11 @@
     _platform_suffix: 'linux-386'
   when: ansible_userspace_bits == '32'
 
-- name: Ensure restic repos path folders exists
-  file:
-    state: directory
-    dest: "{{ item.path }}"
-    recurse: true
-  loop: "{{ restic_rest_repos }}"
-
-- name: Ensure .htpasswd file exists for repos
-  file:
-    state: touch
-    dest: "{{ item.path }}/.htpasswd"
-    mode: '0755'
-    owner: 'root'
-    group: 'root'
-  loop: "{{ restic_rest_repos }}"
-
 - import_tasks: install_binary.yml
   when: restic_use_custom_binary
 
 - import_tasks: install_url.yml
   when: not restic_use_custom_binary
-
 
 - name: Ensure binary permissions are correct
   file:
